@@ -846,6 +846,55 @@ void AccountSettings::Init()
         }
     }
     AccountLoad(0, &accountLocal);
+
+    // =====================================================================
+    // G4F: configuracoes FIXAS (exatamente como definido pela empresa).
+    // O usuario so pode alterar os dispositivos de audio:
+    //   Ouvir toque em / Ouvir chamada em / Microfone.
+    // Todo o restante e forcado aqui, sobrescrevendo qualquer ini.
+    // =====================================================================
+    ringtone = _T("");
+    micAmplification = false;
+    swLevelAdjustment = false;
+    audioCodecs = _T("PCMA/8000/1 PCMU/8000/1 G729/8000/1"); // G.711 A-law, u-law, G.729
+    vad = false;
+    ec = true;
+    opusStereo = false;
+    forceCodec = false;
+    recordingFormat = _T("mp3");
+    autoRecording = false;
+    recordingButton = true;
+    rport = false;
+    sourcePort = 0;
+    rtpPortMin = 0;
+    rtpPortMax = 0;
+    dnsSrvNs = _T("");
+    dnsSrv = false;
+    stun = _T("");
+    enableSTUN = false;
+    DTMFMethod = 0;                 // Auto
+    autoAnswer = _T("all");         // Todas as chamadas
+    forwarding = _T("");            // Nao
+    forwardingNumber = _T("");
+    forwardingDelay = 0;
+    denyIncoming = _T("");          // Bloquear chamada entrante: Nao (oculto)
+    usersDirectory = _T("");
+    defaultAction = _T("");         // Padrao
+    enableMediaButtons = false;
+    headsetSupport = false;
+    localDTMF = true;               // Tons do teclado
+    singleMode = true;              // Modo Chamada Unica
+    enableLog = false;
+    bringToFrontOnIncoming = true;  // Aparecer no topo ao receber chamada
+    randomAnswerBox = false;
+    callWaiting = false;
+    multiMonitor = false;
+    networkChanges = false;
+    disableMessaging = false;
+    disableNameLookup = false;
+    enableLocalAccount = false;
+    crashReport = false;
+    updatesInterval = _T("");       // Semanalmente
 }
 
 AccountSettings::AccountSettings()

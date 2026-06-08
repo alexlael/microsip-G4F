@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "strsafe.h"
 #include "langpack.h"
+#include "resource.h"
 
 LangPackStruct langPack;
 
@@ -353,6 +354,30 @@ void TranslateMenu( HMENU hmenu )
 }
 
 
+// G4F: carrega o pacote de idioma embutido no executavel (recurso RCDATA)
+static int LoadLangPackEmbedded(void)
+{
+	HMODULE hMod = GetModuleHandle(NULL);
+	HRSRC hRes = FindResource(hMod, MAKEINTRESOURCE(IDR_LANGPACK_PTBR), RT_RCDATA);
+	if (!hRes) return 1;
+	HGLOBAL hData = LoadResource(hMod, hRes);
+	if (!hData) return 1;
+	DWORD size = SizeofResource(hMod, hRes);
+	const void *pData = LockResource(hData);
+	if (!pData || !size) return 1;
+	TCHAR tempDir[MAX_PATH], tempFile[MAX_PATH];
+	if (!GetTempPath(MAX_PATH, tempDir)) return 1;
+	_sntprintf(tempFile, MAX_PATH, _T("%slangpack_portuguesebr.txt"), tempDir);
+	HANDLE hFile = CreateFile(tempFile, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	if (hFile == INVALID_HANDLE_VALUE) return 1;
+	DWORD written = 0;
+	WriteFile(hFile, pData, size, &written, NULL);
+	CloseHandle(hFile);
+	int res = LoadLangPack(tempFile);
+	DeleteFile(tempFile);
+	return res;
+}
+
 void LoadLangPackModule(void)
 {
 	HANDLE hFind;
@@ -371,6 +396,11 @@ void LoadLangPackModule(void)
 		_tcscpy(str2 + 1, fd.cFileName);
 		_tcscpy(szLangPack, szSearch);
 		LoadLangPack(szLangPack);
+	}
+	else
+	{
+		// G4F: nenhum arquivo externo -> usa o portugues embutido
+		LoadLangPackEmbedded();
 	}
 }
 

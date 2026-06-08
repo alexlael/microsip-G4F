@@ -409,6 +409,27 @@ BOOL SettingsDlg::OnInitDialog()
 		}
 	}
 
+	// =====================================================================
+	// G4F: trava TODA a tela de Configuracoes, deixando editaveis apenas os
+	// 3 dispositivos de audio (Ouvir toque em / Ouvir chamada em / Microfone)
+	// e os botoes OK/Cancelar. Rotulos (IDC_STATIC) ficam normais.
+	// =====================================================================
+	{
+		CWnd* pChild = GetWindow(GW_CHILD);
+		while (pChild) {
+			int id = pChild->GetDlgCtrlID();
+			if (id > 0
+				&& id != IDC_SETTINGS_RING
+				&& id != IDC_SETTINGS_SPEAKERS
+				&& id != IDC_SETTINGS_MICROPHONE
+				&& id != IDOK
+				&& id != IDCANCEL) {
+				pChild->EnableWindow(FALSE);
+			}
+			pChild = pChild->GetWindow(GW_HWNDNEXT);
+		}
+	}
+
 	return TRUE;
 }
 
