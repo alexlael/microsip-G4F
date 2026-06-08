@@ -20,6 +20,7 @@
 #define _GLOBAL_VERSION "3.22.3"
 #define _GLOBAL_VERSION_COMMA 3,22,3,5
 #define _GLOBAL_KEY "*********"
-#define _GLOBAL_VIDEO
+// Video desabilitado nesta build (sem SDL/openh264); pjproject compilado com PJMEDIA_HAS_VIDEO 0
+//#define _GLOBAL_VIDEO
 #define _GLOBAL_NAME "MicroSIP"
 #define _GLOBAL_COMPANY "www.microsip.org"
