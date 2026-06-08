@@ -1,0 +1,40 @@
+# Visual Studio / C++ build artifacts
+[Dd]ebug/
+[Rr]elease/
+[Ww]in32/
+x64/
+[Bb]in/
+[Oo]bj/
+ipch/
+*.obj
+*.o
+*.pch
+*.pdb
+*.idb
+*.ilk
+*.tlog
+*.lastbuildstate
+*.exe
+*.dll
+*.lib
+*.exp
+*.res
+*.aps
+*.suo
+*.user
+*.cache
+*.log
+
+# Visual Studio folders
+.vs/
+.vscode/
+
+# NuGet
+packages/
+*.nupkg
+
+# MicroSIP runtime / crash artifacts
+crash-dump_*.txt
+crash-dump_*.dmp
+block_*.dat
+*.ini
