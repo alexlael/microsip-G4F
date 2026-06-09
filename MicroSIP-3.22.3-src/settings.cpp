@@ -894,7 +894,7 @@ void AccountSettings::Init()
     disableNameLookup = false;
     enableLocalAccount = false;
     crashReport = false;
-    updatesInterval = _T("");       // Semanalmente
+    updatesInterval = _T("never");  // Nunca buscar atualizacao (travado)
 }
 
 AccountSettings::AccountSettings()
