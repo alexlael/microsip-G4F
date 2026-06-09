@@ -48,6 +48,10 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 Name: "{userstartup}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Parameters: "/minimized"; Tasks: startupicon
 
 [Registry]
+; Registra o caminho da instalacao para o MicroSIP rodar em modo "instalado"
+; (config em %APPDATA%\MicroSIP, sem criar .ini junto do exe / na area de trabalho).
+Root: HKA; Subkey: "Software\MicroSIP"; ValueType: string; ValueName: ""; ValueData: "{app}"; Flags: uninsdeletekey
+
 ; Protocolos de chamada (tel/sip/callto) -> abrem no MicroSIP G4F
 Root: HKA; Subkey: "Software\Classes\tel"; ValueType: string; ValueName: ""; ValueData: "URL:tel Protocol"; Flags: uninsdeletekey
 Root: HKA; Subkey: "Software\Classes\tel"; ValueType: string; ValueName: "URL Protocol"; ValueData: ""
