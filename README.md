@@ -10,7 +10,7 @@ O objetivo é um cliente **pré-configurado e travado**: o usuário final só pr
 
 **[➡️ Baixar o instalador (última versão)](https://github.com/alexlael/microsip-G4F/releases/latest)**
 
-Na página de *Releases*, baixe o arquivo **`MicroSIP-G4F-Setup-3.22.3.exe`**.
+Na página de *Releases*, baixe o instalador mais recente (**`MicroSIP-G4F-Setup-3.22.4.exe`**).
 
 - Instalação **por usuário** (não pede senha de administrador).
 - Cria atalhos (Menu Iniciar / Área de Trabalho) e desinstalador.
@@ -34,6 +34,7 @@ Na página de *Releases*, baixe o arquivo **`MicroSIP-G4F-Setup-3.22.3.exe`**.
 | **Ícone** | Logo MicroSIP | **Logo da G4F** |
 | **Vídeo** | Sim | **Desabilitado** (build voz) |
 | **Distribuição** | Instalador + DLLs | **Executável único** (OpenSSL, runtime C/C++, MFC e G.729 todos estáticos) — sem DLLs, sem Visual C++ Redistributable |
+| **Log de suporte** | Opcional (desativado) | **Sempre ativo**, gravado na pasta de instalação (`microsip_log.txt`) — facilita diagnóstico via Menu → "Ver arquivo de log" |
 
 Os valores fixos da conta ficam em [`define.h`](MicroSIP-3.22.3-src/define.h) (`_GLOBAL_ACC_*`); os ajustes fixos das Configurações ficam no fim de `AccountSettings::Init` em [`settings.cpp`](MicroSIP-3.22.3-src/settings.cpp).
 

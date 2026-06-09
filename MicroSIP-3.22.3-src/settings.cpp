@@ -175,7 +175,7 @@ void AccountSettings::Init()
             pathRoaming = appDataRoaming;
             CreateDirectory(appDataLocal, NULL);
             pathLocal = appDataLocal;
-            logFile = pathLocal + logFile;
+            logFile = pathExe + _T("\\") + logFile;   // G4F: log de suporte na pasta de instalacao
             if (!::PathFileExists(pathRoaming + iniFile) && ::PathFileExists(pathLocal + iniFile)) {
                 MoveFile(pathLocal + iniFile, pathRoaming + iniFile);
             }
@@ -884,7 +884,7 @@ void AccountSettings::Init()
     headsetSupport = false;
     localDTMF = true;               // Tons do teclado
     singleMode = true;              // Modo Chamada Unica
-    enableLog = false;
+    enableLog = true;               // Log de suporte sempre ativo (arquivo na pasta do exe)
     bringToFrontOnIncoming = true;  // Aparecer no topo ao receber chamada
     randomAnswerBox = false;
     callWaiting = false;

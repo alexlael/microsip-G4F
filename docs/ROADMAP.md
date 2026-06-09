@@ -7,7 +7,7 @@ Documento vivo — atualizar conforme as features evoluem.
 
 ---
 
-## ✅ Pronto (versão 3.22.3)
+## ✅ Pronto (versão 3.22.4)
 
 - **Login simplificado** — só ramal, login e senha editáveis; resto fixo/travado.
 - **Configurações travadas** — só dispositivos de áudio editáveis.
@@ -19,6 +19,7 @@ Documento vivo — atualizar conforme as features evoluem.
 - **Build de voz** (sem vídeo), **executável único** (OpenSSL/CRT/MFC/G.729 estáticos).
 - **Instalador** (Inno Setup), instalação **por usuário** (sem admin).
 - Correção do registro SIP atrás de NAT (`rport`).
+- **Log de suporte sempre ativo** (`microsip_log.txt` na pasta de instalação) — para diagnóstico.
 - README + Release no GitHub com download do instalador.
 
 ---
