@@ -118,6 +118,15 @@ MicroSIP-3.22.3-src/
 
 ---
 
+## 🗺️ Roadmap e documentação
+
+- [`docs/ROADMAP.md`](docs/ROADMAP.md) — o que já foi feito e o que está planejado.
+- [`docs/admin-mode.md`](docs/admin-mode.md) — design da feature de **modo administrador** (destravar configurações com login de admin).
+
+> Documentação de direção/arquitetura fica em `docs/`. Nenhum dado sensível (senhas, credenciais) é versionado.
+
+---
+
 ## 📜 Licença
 
 O MicroSIP é distribuído sob a **GNU GPL v2**. Este projeto é um *fork* customizado e segue a mesma licença. Bibliotecas de terceiros (PJSIP, OpenSSL, bcg729) mantêm suas respectivas licenças.
