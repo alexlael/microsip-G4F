@@ -17,8 +17,8 @@
  */
 
 #pragma once
-#define _GLOBAL_VERSION "3.22.4"
-#define _GLOBAL_VERSION_COMMA 3,22,4,0
+#define _GLOBAL_VERSION "3.22.5"
+#define _GLOBAL_VERSION_COMMA 3,22,5,0
 #define _GLOBAL_KEY "*********"
 // Video desabilitado nesta build (sem SDL/openh264); pjproject compilado com PJMEDIA_HAS_VIDEO 0
 //#define _GLOBAL_VIDEO

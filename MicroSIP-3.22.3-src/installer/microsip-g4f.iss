@@ -4,7 +4,7 @@
 ; O exe vem de ..\Release\microsip.exe (saida do build Release|Win32).
 
 #define MyAppName "MicroSIP G4F"
-#define MyAppVersion "3.22.4"
+#define MyAppVersion "3.22.5"
 #define MyAppPublisher "G4F / Advance Telecom"
 #define MyAppExeName "microsip.exe"
 

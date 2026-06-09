@@ -2241,18 +2241,17 @@ void CmainDlg::OnMenuAccountEdit(UINT nID)
 }
 void CmainDlg::OnMenuAccountChange(UINT nID)
 {
+	int idNew = nID - ID_ACCOUNT_CHANGE_RANGE + 1;
+	// G4F: a conta ativa NUNCA pode ser desativada (fica sempre ativa).
+	// Clicar na conta que ja esta ativa nao faz nada.
+	if (accountSettings.accountId == idNew) {
+		return;
+	}
 	if (accountSettings.accountId) {
 		PJAccountDelete(true);
 	}
-	int idNew = nID - ID_ACCOUNT_CHANGE_RANGE + 1;
-	if (accountSettings.accountId != idNew) {
-		accountSettings.accountId = idNew;
-		accountSettings.AccountLoad(accountSettings.accountId, &accountSettings.account);
-	}
-	else {
-			accountSettings.accountId = 0;
-			InitUI();
-	}
+	accountSettings.accountId = idNew;
+	accountSettings.AccountLoad(accountSettings.accountId, &accountSettings.account);
 	OnAccountChanged();
 	accountSettings.SettingsSave();
 	mainDlg->PJAccountAdd();
@@ -2436,11 +2435,8 @@ void CmainDlg::MainPopupMenu(bool isMenuButton)
 					i++;
 				}
 				if (i == 1) {
-						MENUITEMINFO menuItemInfo;
-						menuItemInfo.cbSize = sizeof(MENUITEMINFO);
-						menuItemInfo.fMask = MIIM_STRING;
-						menuItemInfo.dwTypeData = Translate(_T("Make Active"));
-						tracker->SetMenuItemInfo(ID_ACCOUNT_CHANGE_RANGE, &menuItemInfo);
+						// G4F: oculta o item "Tornar Ativo" (conta unica fica sempre ativa)
+						tracker->DeleteMenu(ID_ACCOUNT_CHANGE_RANGE, MF_BYCOMMAND);
 				}
 				str = Translate(_T("Edit Account"));
 				str.Append(_T("\tCtrl+M"));
