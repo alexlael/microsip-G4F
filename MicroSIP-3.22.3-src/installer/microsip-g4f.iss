@@ -25,7 +25,7 @@ SetupIconFile=..\res\microsip.ico
 Compression=lzma2
 SolidCompression=yes
 WizardStyle=modern
-PrivilegesRequired=admin
+PrivilegesRequired=lowest
 CloseApplications=yes
 ArchitecturesAllowed=x86 x64compatible
 ; app de 32 bits -> instala em Program Files (x86) em sistemas 64 bits
@@ -45,7 +45,7 @@ Source: "..\Release\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{group}\Desinstalar {#MyAppName}"; Filename: "{uninstallexe}"
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
-Name: "{commonstartup}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Parameters: "/minimized"; Tasks: startupicon
+Name: "{userstartup}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Parameters: "/minimized"; Tasks: startupicon
 
 [Registry]
 ; Protocolos de chamada (tel/sip/callto) -> abrem no MicroSIP G4F

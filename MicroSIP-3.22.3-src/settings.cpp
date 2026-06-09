@@ -864,7 +864,7 @@ void AccountSettings::Init()
     recordingFormat = _T("mp3");
     autoRecording = false;
     recordingButton = true;
-    rport = false;
+    rport = true;                   // RFC3581 (necessario p/ registro atras de NAT)
     sourcePort = 0;
     rtpPortMin = 0;
     rtpPortMax = 0;
