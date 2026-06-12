@@ -326,6 +326,12 @@ BOOL SettingsDlg::OnInitDialog()
 			break;
 		}
 	}
+	// G4FSIP: "Bloquear chamada entrante" sempre "Nao" e oculto em TODOS os
+	// modos (inclusive admin) — campo, rotulo e ajuda escondidos.
+	combobox->SetCurSel(0);
+	GetDlgItem(IDC_SETTINGS_DENY_INCOMING)->ShowWindow(SW_HIDE);
+	GetDlgItem(IDC_SETTINGS_DENY_INCOMING_LABEL)->ShowWindow(SW_HIDE);
+	GetDlgItem(IDC_SETTINGS_HELP_DENY_INCOMING)->ShowWindow(SW_HIDE);
 	GetDlgItem(IDC_SETTINGS_DIRECTORY)->SetWindowText(accountSettings.usersDirectory);
 
 	combobox= (CComboBox*)GetDlgItem(IDC_SETTINGS_DEFAULT_ACTION);
@@ -405,7 +411,9 @@ BOOL SettingsDlg::OnInitDialog()
 	// =====================================================================
 	// G4FSIP: trava TODA a tela de Configuracoes para o usuario comum
 	// (nada e ocultado, apenas desabilitado). Excecoes editaveis sem admin:
-	// OK/Cancelar e a barra de volume do toque (IDC_SETTINGS_VOLUME_RING).
+	// OK/Cancelar, a barra de volume do toque (IDC_SETTINGS_VOLUME_RING) e os
+	// dispositivos de audio: "Ouvir toque em" (IDC_SETTINGS_RING), "Ouvir
+	// chamada em" (IDC_SETTINGS_SPEAKERS) e "Microfone" (IDC_SETTINGS_MICROPHONE).
 	// No Modo administrador a tela inteira fica editavel; o que o admin
 	// salvar persiste no ini e passa a valer (travado) para o usuario.
 	// =====================================================================
@@ -416,7 +424,10 @@ BOOL SettingsDlg::OnInitDialog()
 			if (id > 0
 				&& id != IDOK
 				&& id != IDCANCEL
-				&& id != IDC_SETTINGS_VOLUME_RING) {
+				&& id != IDC_SETTINGS_VOLUME_RING
+				&& id != IDC_SETTINGS_RING
+				&& id != IDC_SETTINGS_SPEAKERS
+				&& id != IDC_SETTINGS_MICROPHONE) {
 				pChild->EnableWindow(FALSE);
 			}
 			pChild = pChild->GetWindow(GW_HWNDNEXT);
@@ -621,10 +632,9 @@ LRESULT SettingsDlg::OnUpdateSettings(WPARAM wParam, LPARAM lParam)
 	GetDlgItem(IDC_SETTINGS_FWD_DELAY)->GetWindowText(str);
 	accountSettings.forwardingDelay = _wtoi(str);
 	
-	// Bloquear chamada entrante: salva o que esta na UI (travada para o
-	// usuario comum; editavel no Modo administrador)
-	combobox = (CComboBox*)GetDlgItem(IDC_SETTINGS_DENY_INCOMING);
-	accountSettings.denyIncoming = denyIncomingValues.GetAt(combobox->GetCurSel());
+	// G4FSIP: "Bloquear chamada entrante" e sempre "Nao" (vazio) — o campo
+	// fica oculto e nunca pode ser alterado, nem no Modo administrador.
+	accountSettings.denyIncoming = _T("");
 
 	GetDlgItem(IDC_SETTINGS_DIRECTORY)->GetWindowText(accountSettings.usersDirectory);
 	accountSettings.usersDirectory.Trim();

@@ -60,7 +60,7 @@
 
 #define _GLOBAL_CODECS_ENABLED "PCMA/8000/1 PCMU/8000/1"
 
-#define _GLOBAL_SETT_DENYINC_DEFAULT "button"
+#define _GLOBAL_SETT_DENYINC_DEFAULT ""
 #define _GLOBAL_SETT_AA_DEFAULT "button"
 
 #define _GLOBAL_BUSINESS_FEATURE "This feature is not available in the free version."

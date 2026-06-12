@@ -583,7 +583,7 @@ void AccountSettings::Init()
     networkChanges = _wtoi(str);
 
     ptr = updatesInterval.GetBuffer(255);
-    GetPrivateProfileString(section, _T("updatesInterval"), NULL, ptr, 256, iniFile);
+    GetPrivateProfileString(section, _T("updatesInterval"), _T("never"), ptr, 256, iniFile);
     updatesInterval.ReleaseBuffer();
     ptr = str.GetBuffer(255);
     GetPrivateProfileString(section, _T("checkUpdatesTime"), NULL, ptr, 256, iniFile);
@@ -884,7 +884,7 @@ void AccountSettings::Init()
         forwarding = _T("");            // Encaminhamento: Nao
         forwardingNumber = _T("");
         forwardingDelay = 0;
-        denyIncoming = _T("button");    // Bloquear chamada entrante: Botao de controle
+        denyIncoming = _T("");          // Bloquear chamada entrante: sempre Nao (oculto na UI)
         usersDirectory = _T("");
         defaultAction = _T("");         // Lista de acao padrao: Padrao
         enableMediaButtons = false;     // Usar teclas multimidia: nao
@@ -900,7 +900,7 @@ void AccountSettings::Init()
         enableLocalAccount = false;     // Habilitar conta local: nao
         crashReport = false;            // Enviar relatorio de erro: nao
         enableLog = true;               // Habilitar arquivo de log: sim
-        updatesInterval = _T("weekly"); // Verificar por atualizacoes: Semanalmente
+        updatesInterval = _T("never");  // Verificar por atualizacoes: Nunca
 
         SettingsSave();
         WritePrivateProfileString(section, _T("policySeeded"), _T("1"), iniFile);

@@ -10,7 +10,7 @@ O objetivo é um cliente **pré-configurado e travado**: o usuário final só di
 
 **[➡️ Baixar o instalador (última versão)](https://github.com/alexlael/microsip-G4F/releases/latest)**
 
-Instalador mais recente: **`G4FSIP-Setup-3.22.8.exe`**.
+Instalador mais recente: **`G4FSIP-Setup-3.22.9.exe`**.
 
 - Instalação **por usuário** (não pede senha de administrador do Windows).
 - Instala em pasta própria (`G4FSIP`), **sem herdar** configurações do MicroSIP oficial.
@@ -27,14 +27,15 @@ Instalador mais recente: **`G4FSIP-Setup-3.22.8.exe`**.
 | **Identidade / instalação** | `MicroSIP`, `%APPDATA%\MicroSIP`, `Software\MicroSIP` | **`G4FSIP`**, `%APPDATA%\G4FSIP`, `Software\G4FSIP` — **independente** do MicroSIP padrão da máquina |
 | **Tela de Conta** | Todos os campos editáveis | Só **Usuário (ramal) e Senha** editáveis. Servidor/Proxy/Domínio (`g4f.advancetelecom.com.br:21225`), transporte, etc. pré-preenchidos e travados |
 | **Nome de Exibição** | Manual | Preenchido automaticamente = ramal |
-| **Configurações** | Tudo editável | **Travadas** para o usuário comum (nada oculto, apenas desabilitado). Única exceção liberada: a **barra de volume do toque** |
+| **Configurações** | Tudo editável | **Travadas** para o usuário comum (nada oculto, apenas desabilitado). Exceções sempre liberadas: **dispositivos de áudio** (Ouvir toque em, Ouvir chamada em, Microfone) e a **barra de volume do toque** |
 | **Modo administrador** | — | Menu **"Modo administrador…"** (senha por *hash* no exe) destrava Conta e Configurações na sessão; o que o admin salvar persiste e passa a valer (travado) para o usuário |
 | **Política de configuração** | — | "Semear uma vez": na 1ª execução aplica os padrões da empresa no `.ini` (`policySeeded=1`); depois vale o `.ini`, que só o admin altera |
 | **Codecs** | Configurável | Padrão: **G.711 A-law, G.711 u-law, G.729** |
 | **Atendimento automático** | Desligado | **Todas as chamadas**, com demora de **3 s** |
 | **Gravação de chamada** | Opcional | **Ativa** (MP3) por padrão |
-| **Bloquear chamada entrante** | Configurável | Padrão **"Botão de controle"** (visível, travado p/ usuário) |
-| **"Tornar Ativo"** | Pode desativar a conta | Visível, porém a desativação só ocorre no **Modo administrador** — a conta nunca cai por clique acidental |
+| **Bloquear chamada entrante** | Configurável | Sempre **"Não"** e **oculto** da interface (inclusive no Modo administrador) |
+| **Verificar atualizações** | Configurável | Padrão **"Nunca"** |
+| **Conta / "Tornar Ativo"** | Múltiplas contas; clicar desativa | Usuário comum tem **conta única** (sem duplicação no menu); a conta aparece uma vez pelo nome e clicar nela a mantém ativa — não há rótulo "Tornar Ativo" e a conta não cai por clique acidental. Múltiplas contas só no Modo administrador |
 | **Idioma** | Pacote externo | **Português (BR) embutido** no executável |
 | **Ícone** | Logo MicroSIP | **Logo da G4F** |
 | **Vídeo** | Sim | **Desabilitado** (build de voz) |
@@ -83,9 +84,9 @@ signtool sign /sha1 <thumbprint-do-cert-G4F> /fd SHA256 ^
 ```bat
 ISCC.exe MicroSIP-3.22.3-src\installer\g4fsip.iss
 signtool sign /sha1 <thumbprint-do-cert-G4F> /fd SHA256 ^
-  /tr http://timestamp.digicert.com /td SHA256 G4FSIP-Setup-3.22.8.exe
+  /tr http://timestamp.digicert.com /td SHA256 G4FSIP-Setup-3.22.9.exe
 ```
-Saída: `G4FSIP-Setup-3.22.8.exe`.
+Saída: `G4FSIP-Setup-3.22.9.exe`.
 
 ---
 

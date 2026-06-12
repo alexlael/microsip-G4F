@@ -17,8 +17,8 @@
  */
 
 #pragma once
-#define _GLOBAL_VERSION "3.22.8"
-#define _GLOBAL_VERSION_COMMA 3,22,8,0
+#define _GLOBAL_VERSION "3.22.9"
+#define _GLOBAL_VERSION_COMMA 3,22,9,0
 #define _GLOBAL_KEY "*********"
 // Hash SHA-256 (hex, minusculo) da senha do modo administrador.
 // A senha em si NAO fica no codigo; para troca-la, gere o novo hash e recompile.

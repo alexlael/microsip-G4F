@@ -2480,18 +2480,11 @@ void CmainDlg::MainPopupMenu(bool isMenuButton)
 					}
 					i++;
 				}
-				if (i == 1) {
-					MENUITEMINFO menuItemInfo;
-					menuItemInfo.cbSize = sizeof(MENUITEMINFO);
-					menuItemInfo.fMask = MIIM_STRING;
-					menuItemInfo.dwTypeData = Translate(_T("Make Active"));
-					tracker->SetMenuItemInfo(ID_ACCOUNT_CHANGE_RANGE, &menuItemInfo);
-					// G4FSIP: item visivel sempre; desativar a conta so no
-					// Modo administrador (acinzentado para o usuario comum)
-					if (!msip_admin_mode) {
-						tracker->EnableMenuItem(ID_ACCOUNT_CHANGE_RANGE, MF_BYCOMMAND | MF_GRAYED);
-					}
-				}
+				// G4FSIP: nao renomeamos o item para "Tornar Ativo". A conta
+				// aparece UMA vez pelo seu nome; clicar nela ja a torna ativa
+				// (OnMenuAccountChange). Para o usuario comum, clicar na conta
+				// ja ativa e um no-op (nao desativa); no Modo administrador o
+				// toggle original e restaurado.
 				str = Translate(_T("Edit Account"));
 				str.Append(_T("\tCtrl+M"));
 				if (i == 1) {

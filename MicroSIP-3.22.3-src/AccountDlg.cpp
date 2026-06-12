@@ -557,6 +557,13 @@ void AccountDlg::OnBnClickedOk()
 			}
 			i++;
 		}
+		// G4FSIP: o usuario comum tem conta UNICA. Se ja existe uma conta,
+		// reaproveita a conta 1 (sobrescreve) em vez de criar uma segunda
+		// conta duplicada. No Modo administrador o comportamento original
+		// (varias contas) e mantido.
+		if (!msip_admin_mode && i > 1) {
+			i = 1;
+		}
 		accountId = i;
 	}
 
