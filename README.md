@@ -1,8 +1,8 @@
-# MicroSIP G4F
+# G4FSIP
 
-Versão customizada do **[MicroSIP](https://www.microsip.org/)** 3.22.3 (softphone SIP para Windows) preparada para os ramais do PBX **G4F / Advance Telecom**.
+Softphone SIP para Windows da **G4F / Advance Telecom**, baseado no **[MicroSIP](https://www.microsip.org/)** 3.22.3, com **identidade própria (G4FSIP)** e instalação **totalmente independente** de qualquer MicroSIP já presente na máquina.
 
-O objetivo é um cliente **pré-configurado e travado**: o usuário final só precisa digitar **ramal, login e senha** — todo o resto já vem definido e não pode ser alterado, reduzindo erro de configuração no atendimento.
+O objetivo é um cliente **pré-configurado e travado**: o usuário final só digita **ramal e senha** — todo o resto já vem definido pela empresa e só pode ser alterado no **Modo administrador** (protegido por senha). Reduz erro de configuração e padroniza o parque de atendimento.
 
 ---
 
@@ -10,83 +10,82 @@ O objetivo é um cliente **pré-configurado e travado**: o usuário final só pr
 
 **[➡️ Baixar o instalador (última versão)](https://github.com/alexlael/microsip-G4F/releases/latest)**
 
-Na página de *Releases*, baixe o instalador mais recente (**`MicroSIP-G4F-Setup-3.22.5.exe`**).
+Instalador mais recente: **`G4FSIP-Setup-3.22.8.exe`**.
 
-- Instalação **por usuário** (não pede senha de administrador).
-- Cria atalhos (Menu Iniciar / Área de Trabalho) e desinstalador.
-- Na primeira vez, o Windows pode mostrar o aviso do **SmartScreen** ("editor desconhecido"), pois o instalador não é assinado digitalmente → **Mais informações → Executar assim mesmo**.
+- Instalação **por usuário** (não pede senha de administrador do Windows).
+- Instala em pasta própria (`G4FSIP`), **sem herdar** configurações do MicroSIP oficial.
+- Exe e instalador são **assinados digitalmente** (editor *G4F Advance Telecom*). Em máquinas onde o certificado da G4F ainda não é confiável, o SmartScreen pode avisar até o certificado ser distribuído pela TI.
 
-> Distribua **apenas o instalador**. Evite copiar o `microsip.exe` avulso, pois rodando "solto" ele entra em modo portátil e cria um `.ini` ao lado do executável.
+> Distribua **apenas o instalador**. Rodar o `microsip.exe` avulso entra em modo portátil e cria um `.ini` ao lado do executável.
 
 ---
 
 ## ✨ Diferenças em relação ao MicroSIP oficial
 
-| Área | MicroSIP oficial | **MicroSIP G4F** |
+| Área | MicroSIP oficial | **G4FSIP** |
 |---|---|---|
-| **Tela de Conta** | Todos os campos editáveis | Só **Usuário, Login e Senha** editáveis. Servidor/Proxy/Domínio (`g4f.advancetelecom.com.br:21225`), transporte (UDP+TCP), porta, etc. **fixos e travados** |
+| **Identidade / instalação** | `MicroSIP`, `%APPDATA%\MicroSIP`, `Software\MicroSIP` | **`G4FSIP`**, `%APPDATA%\G4FSIP`, `Software\G4FSIP` — **independente** do MicroSIP padrão da máquina |
+| **Tela de Conta** | Todos os campos editáveis | Só **Usuário (ramal) e Senha** editáveis. Servidor/Proxy/Domínio (`g4f.advancetelecom.com.br:21225`), transporte, etc. pré-preenchidos e travados |
 | **Nome de Exibição** | Manual | Preenchido automaticamente = ramal |
-| **Configurações** | Tudo editável | **Travadas**. Só os 3 dispositivos de áudio (toque / alto-falante / microfone) são editáveis |
-| **Codecs** | Configurável | Fixo: **G.711 A-law, G.711 u-law, G.729** |
-| **Bloquear chamada entrante** | Visível/configurável | **Removido** da tela (sempre "Não") |
-| **Verificar atualizações** | Semanal por padrão | Fixo em **"Nunca"** e travado |
-| **Idioma** | Pacote externo (`langpack_*.txt`) | **Português (BR) embutido** no executável |
+| **Configurações** | Tudo editável | **Travadas** para o usuário comum (nada oculto, apenas desabilitado). Única exceção liberada: a **barra de volume do toque** |
+| **Modo administrador** | — | Menu **"Modo administrador…"** (senha por *hash* no exe) destrava Conta e Configurações na sessão; o que o admin salvar persiste e passa a valer (travado) para o usuário |
+| **Política de configuração** | — | "Semear uma vez": na 1ª execução aplica os padrões da empresa no `.ini` (`policySeeded=1`); depois vale o `.ini`, que só o admin altera |
+| **Codecs** | Configurável | Padrão: **G.711 A-law, G.711 u-law, G.729** |
+| **Atendimento automático** | Desligado | **Todas as chamadas**, com demora de **3 s** |
+| **Gravação de chamada** | Opcional | **Ativa** (MP3) por padrão |
+| **Bloquear chamada entrante** | Configurável | Padrão **"Botão de controle"** (visível, travado p/ usuário) |
+| **"Tornar Ativo"** | Pode desativar a conta | Visível, porém a desativação só ocorre no **Modo administrador** — a conta nunca cai por clique acidental |
+| **Idioma** | Pacote externo | **Português (BR) embutido** no executável |
 | **Ícone** | Logo MicroSIP | **Logo da G4F** |
-| **Vídeo** | Sim | **Desabilitado** (build voz) |
-| **Distribuição** | Instalador + DLLs | **Executável único** (OpenSSL, runtime C/C++, MFC e G.729 todos estáticos) — sem DLLs, sem Visual C++ Redistributable |
-| **Log de suporte** | Opcional (desativado) | **Sempre ativo**, gravado na pasta de instalação (`microsip_log.txt`) — facilita diagnóstico via Menu → "Ver arquivo de log" |
-| **Conta sempre ativa** | "Tornar Ativo" pode desativar a conta | Item **"Tornar Ativo" oculto** e desativação **bloqueada** — a conta nunca cai por clique acidental |
+| **Vídeo** | Sim | **Desabilitado** (build de voz) |
+| **Distribuição** | Instalador + DLLs | **Executável único** (OpenSSL, runtime C/C++, MFC e G.729 estáticos) — sem DLLs |
+| **Assinatura** | Assinado pelo autor | **Assinado pela G4F** (code signing) |
 
-Os valores fixos da conta ficam em [`define.h`](MicroSIP-3.22.3-src/define.h) (`_GLOBAL_ACC_*`); os ajustes fixos das Configurações ficam no fim de `AccountSettings::Init` em [`settings.cpp`](MicroSIP-3.22.3-src/settings.cpp).
+Os valores fixos da conta ficam em [`define.h`](MicroSIP-3.22.3-src/define.h) (`_GLOBAL_ACC_*`); os padrões forçados das Configurações ficam no bloco `policySeeded` no fim de `AccountSettings::Init` em [`settings.cpp`](MicroSIP-3.22.3-src/settings.cpp). A identidade (`_GLOBAL_NAME`) e o *hash* da senha de admin ficam em [`const.h`](MicroSIP-3.22.3-src/const.h).
+
+---
+
+## 🔐 Modo administrador
+
+- Menu principal → **"Modo administrador…"** → digitar a senha (apenas o **hash SHA-256** vai no binário; trocar a senha = recompilar).
+- Com o modo ativo: **Editar Conta** e **Configurações** abrem totalmente editáveis. O que for salvo persiste no `.ini` e vira a configuração travada do usuário daquela máquina.
+- Selecionar o item de novo (fica com ✔) ou fechar o app desativa o modo.
+
+> A senha **não** fica no código nem na documentação — somente o seu hash em `const.h`.
 
 ---
 
 ## 🛠️ Como compilar (reproduzir o build)
 
-O MicroSIP é compilado **dentro** da árvore do PJSIP (pjproject). Resumo do ambiente que funciona:
+O MicroSIP é compilado **dentro** da árvore do PJSIP (pjproject).
 
 ### Pré-requisitos
-- **Visual Studio 2022/2026** com a carga **"Desenvolvimento para desktop com C++"** + componente **C++ MFC** + **Windows SDK 10**.
-- **pjproject 2.15.1** — código-fonte: <https://github.com/pjsip/pjproject/releases/tag/2.15.1>
-- **OpenSSL Win32** (pacote de desenvolvedor): <https://slproweb.com/products/Win32OpenSSL.html>
-- **bcg729** (codec G.729): <https://github.com/BelledonneCommunications/bcg729>
-- **Inno Setup 6** (para gerar o instalador): <https://jrsoftware.org/isdl.php>
-
-### Montagem das pastas
-1. Extraia o `pjproject-2.15.1`.
-2. Coloque este repositório (a pasta `MicroSIP-3.22.3-src`) **dentro** do pjproject, com o nome `microsip` (pode ser uma junção/`mklink /J`), de forma que `..\pjlib`, `..\pjsip` etc. resolvam a partir dela.
-3. Crie `pjlib/include/pj/config_site.h` com:
-   ```c
-   #define PJ_HAS_SSL_SOCK 1
-   #define PJMEDIA_HAS_VIDEO 0
-   #define PJMEDIA_HAS_BCG729 1
-   ```
-4. Compile a **bcg729** como lib estática `/MT` (`bcg729.lib`).
+- **Visual Studio 2022/2026** com **"Desenvolvimento para desktop com C++"** + **C++ MFC** + **Windows SDK 10**.
+- **pjproject 2.15.1** — <https://github.com/pjsip/pjproject/releases/tag/2.15.1>
+- **OpenSSL Win32** (dev) — <https://slproweb.com/products/Win32OpenSSL.html>
+- **bcg729** (G.729) — <https://github.com/BelledonneCommunications/bcg729>
+- **Inno Setup 6** — <https://jrsoftware.org/isdl.php>
 
 ### Compilar
-Toolset **v145**, **Release-Static | Win32** para o pjproject e **Release | Win32** para o MicroSIP, injetando os caminhos de OpenSSL/bcg729 e `BCG729_STATIC`:
-
+Toolset **v145**, **Release | Win32** para o MicroSIP, dentro do pjproject:
 ```bat
-:: 1) pjproject (gera libpjproject-...-Release-Static.lib)
-MSBuild pjproject-vs14.sln /t:libpjproject /p:Configuration=Release-Static /p:Platform=Win32 ^
-  /p:PlatformToolset=v145 /p:WindowsTargetPlatformVersion=10.0.26100.0 ^
-  /p:ForceImportBeforeCppTargets=<...>\deps.props
-
-:: 2) MicroSIP (gera microsip.exe)
 MSBuild microsip\microsip.vcxproj /p:Configuration=Release /p:Platform=Win32 ^
-  /p:PlatformToolset=v145 /p:WindowsTargetPlatformVersion=10.0.26100.0 ^
-  /p:ForceImportBeforeCppTargets=<...>\deps.props
+  /p:PlatformToolset=v145 /p:WindowsTargetPlatformVersion=10.0.22621.0
 ```
 
-Onde `deps.props` adiciona `IncludePath`/`LibraryPath` do OpenSSL e da bcg729 e define `BCG729_STATIC`.
-
-### Gerar o instalador
+### Assinar (code signing da G4F)
 ```bat
-ISCC.exe MicroSIP-3.22.3-src\installer\microsip-g4f.iss
+signtool sign /sha1 <thumbprint-do-cert-G4F> /fd SHA256 ^
+  /tr http://timestamp.digicert.com /td SHA256 Release\microsip.exe
 ```
-Saída: `MicroSIP-G4F-Setup-3.22.3.exe`.
 
-> A "receita" completa (toolset, props, comandos) está documentada nos commits e no histórico do projeto.
+### Gerar e assinar o instalador
+```bat
+ISCC.exe MicroSIP-3.22.3-src\installer\g4fsip.iss
+signtool sign /sha1 <thumbprint-do-cert-G4F> /fd SHA256 ^
+  /tr http://timestamp.digicert.com /td SHA256 G4FSIP-Setup-3.22.8.exe
+```
+Saída: `G4FSIP-Setup-3.22.8.exe`.
 
 ---
 
@@ -96,36 +95,26 @@ Saída: `MicroSIP-G4F-Setup-3.22.3.exe`.
 MicroSIP-3.22.3-src/
 ├── *.cpp / *.h            Código-fonte (C++/MFC)
 ├── define.h               Valores fixos da conta G4F (_GLOBAL_ACC_*)
-├── const.h                Versão, nome, vídeo on/off
-├── settings.cpp           Configurações fixas/travadas (AccountSettings::Init)
-├── AccountDlg.cpp         Tela de conta simplificada (ApplyDefaultsAndLock)
-├── SettingsDlg.cpp        Tela de configurações travada
-├── lib/langpack.cpp       Carregamento do idioma embutido
-├── res/
-│   ├── microsip.ico       Ícone (logo G4F)
-│   └── langpack_portuguesebr.txt   Tradução pt-BR (embutida via RCDATA)
+├── const.h                Versão, identidade (G4FSIP), hash da senha de admin
+├── global.cpp             Verificação da senha de admin (msip_verify_admin_password)
+├── settings.cpp           Padrões forçados ("semear uma vez") em AccountSettings::Init
+├── AccountDlg.cpp         Conta simplificada (ApplyDefaults / LockFields)
+├── SettingsDlg.cpp        Configurações travadas (exceto volume) / destravadas p/ admin
+├── mainDlg.cpp            Item de menu + diálogo do Modo administrador
+├── lib/langpack.cpp       Idioma embutido
+├── res/                   Ícone (logo G4F) + langpack pt-BR
 └── installer/
-    └── microsip-g4f.iss   Script do instalador (Inno Setup)
+    └── g4fsip.iss         Script do instalador (Inno Setup)
 ```
 
 ---
 
-## 🎯 Principais customizações no código
-
-- **Login simplificado:** `AccountDlg::ApplyDefaultsAndLock` + bloco fixo em `AccountDlg::OnBnClickedOk`; constantes em `define.h`.
-- **Configurações travadas:** bloco no fim de `AccountSettings::Init` (`settings.cpp`) + desabilitação dos controles em `SettingsDlg::OnInitDialog`.
-- **Idioma embutido:** `res/langpack_portuguesebr.txt` como recurso `IDR_LANGPACK_PTBR` (`main.rc`), carregado por `LoadLangPackModule` (`lib/langpack.cpp`).
-- **G.729:** `PJMEDIA_HAS_BCG729` + lib `bcg729` estática.
-- **Build voz/único:** `_GLOBAL_VIDEO` desativado em `const.h`; OpenSSL/CRT/MFC/G729 estáticos.
-
----
-
-## 🗺️ Roadmap e documentação
+## 🗺️ Documentação
 
 - [`docs/ROADMAP.md`](docs/ROADMAP.md) — o que já foi feito e o que está planejado.
-- [`docs/admin-mode.md`](docs/admin-mode.md) — design da feature de **modo administrador** (destravar configurações com login de admin).
+- [`docs/admin-mode.md`](docs/admin-mode.md) — design do **modo administrador**.
 
-> Documentação de direção/arquitetura fica em `docs/`. Nenhum dado sensível (senhas, credenciais) é versionado.
+> Nenhum dado sensível (senhas, credenciais) é versionado — apenas o *hash* da senha de admin.
 
 ---
 

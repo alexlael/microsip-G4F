@@ -326,13 +326,6 @@ BOOL SettingsDlg::OnInitDialog()
 			break;
 		}
 	}
-	// Bloquear chamada entrante: sempre "Nao" e oculto (sem possibilidade de alterar)
-	combobox->SetCurSel(0);
-	combobox->EnableWindow(FALSE);
-	combobox->ShowWindow(SW_HIDE);
-	GetDlgItem(IDC_SETTINGS_HELP_DENY_INCOMING)->ShowWindow(SW_HIDE);
-	GetDlgItem(IDC_SETTINGS_DENY_INCOMING_LABEL)->ShowWindow(SW_HIDE);
-
 	GetDlgItem(IDC_SETTINGS_DIRECTORY)->SetWindowText(accountSettings.usersDirectory);
 
 	combobox= (CComboBox*)GetDlgItem(IDC_SETTINGS_DEFAULT_ACTION);
@@ -410,20 +403,20 @@ BOOL SettingsDlg::OnInitDialog()
 	}
 
 	// =====================================================================
-	// G4F: trava TODA a tela de Configuracoes, deixando editaveis apenas os
-	// 3 dispositivos de audio (Ouvir toque em / Ouvir chamada em / Microfone)
-	// e os botoes OK/Cancelar. Rotulos (IDC_STATIC) ficam normais.
+	// G4FSIP: trava TODA a tela de Configuracoes para o usuario comum
+	// (nada e ocultado, apenas desabilitado). Excecoes editaveis sem admin:
+	// OK/Cancelar e a barra de volume do toque (IDC_SETTINGS_VOLUME_RING).
+	// No Modo administrador a tela inteira fica editavel; o que o admin
+	// salvar persiste no ini e passa a valer (travado) para o usuario.
 	// =====================================================================
-	{
+	if (!msip_admin_mode) {
 		CWnd* pChild = GetWindow(GW_CHILD);
 		while (pChild) {
 			int id = pChild->GetDlgCtrlID();
 			if (id > 0
-				&& id != IDC_SETTINGS_RING
-				&& id != IDC_SETTINGS_SPEAKERS
-				&& id != IDC_SETTINGS_MICROPHONE
 				&& id != IDOK
-				&& id != IDCANCEL) {
+				&& id != IDCANCEL
+				&& id != IDC_SETTINGS_VOLUME_RING) {
 				pChild->EnableWindow(FALSE);
 			}
 			pChild = pChild->GetWindow(GW_HWNDNEXT);
@@ -628,8 +621,10 @@ LRESULT SettingsDlg::OnUpdateSettings(WPARAM wParam, LPARAM lParam)
 	GetDlgItem(IDC_SETTINGS_FWD_DELAY)->GetWindowText(str);
 	accountSettings.forwardingDelay = _wtoi(str);
 	
-	// Bloquear chamada entrante: forcado sempre como "Nao"
-	accountSettings.denyIncoming = _T("");
+	// Bloquear chamada entrante: salva o que esta na UI (travada para o
+	// usuario comum; editavel no Modo administrador)
+	combobox = (CComboBox*)GetDlgItem(IDC_SETTINGS_DENY_INCOMING);
+	accountSettings.denyIncoming = denyIncomingValues.GetAt(combobox->GetCurSel());
 
 	GetDlgItem(IDC_SETTINGS_DIRECTORY)->GetWindowText(accountSettings.usersDirectory);
 	accountSettings.usersDirectory.Trim();

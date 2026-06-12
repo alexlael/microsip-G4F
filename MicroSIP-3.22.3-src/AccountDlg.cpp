@@ -21,6 +21,7 @@
 
 #include "AccountDlg.h"
 #include "mainDlg.h"
+#include "global.h"
 #include "langpack.h"
 #include "atlrx.h"
 #include <ws2tcpip.h>
@@ -345,20 +346,27 @@ void AccountDlg::Load(int id)
     }
 
     // -----------------------------------------------------------------------
-    // Login simplificado: pre-preenche os campos fixos com os valores padrao
-    // e bloqueia a edicao. O usuario so altera Usuario, Login e Senha.
+    // Login simplificado: em conta NOVA, semeia os campos fixos com os
+    // valores padrao da empresa. Para o usuario comum a edicao fica
+    // bloqueada (so Usuario, Login e Senha); no Modo administrador todos
+    // os campos ficam editaveis e o que for salvo persiste no ini.
     // (nao se aplica a conta local, id == 0)
     // -----------------------------------------------------------------------
     if (id) {
-        ApplyDefaultsAndLock();
+        if (!isEdit) {
+            ApplyDefaults();
+        }
+        if (!msip_admin_mode) {
+            LockFields();
+        }
     }
 }
 
-void AccountDlg::ApplyDefaultsAndLock()
+void AccountDlg::ApplyDefaults()
 {
     CString str;
 
-    // Valores fixos nos campos de texto
+    // Valores padrao (semente) nos campos de texto
     ((CEdit*)GetDlgItem(IDC_ACCOUNT_LABEL))->SetWindowText(_T(_GLOBAL_ACC_LABEL));
     ((CEdit*)GetDlgItem(IDC_EDIT_SERVER))->SetWindowText(_T(_GLOBAL_ACC_SERVER));
     ((CEdit*)GetDlgItem(IDC_EDIT_PROXY))->SetWindowText(_T(_GLOBAL_ACC_PROXY));
@@ -382,7 +390,10 @@ void AccountDlg::ApplyDefaultsAndLock()
     ((CButton*)GetDlgItem(IDC_REWRITE))->SetCheck(_GLOBAL_ACC_REWRITE ? BST_CHECKED : BST_UNCHECKED);
     ((CButton*)GetDlgItem(IDC_ICE))->SetCheck(_GLOBAL_ACC_ICE ? BST_CHECKED : BST_UNCHECKED);
     ((CButton*)GetDlgItem(IDC_SESSION_TIMER))->SetCheck(_GLOBAL_ACC_DISABLE_SESS_TIMER ? BST_CHECKED : BST_UNCHECKED);
+}
 
+void AccountDlg::LockFields()
+{
     // Campos de texto somente-leitura (mantem visiveis, mas nao editaveis)
     ((CEdit*)GetDlgItem(IDC_ACCOUNT_LABEL))->SetReadOnly(TRUE);
     ((CEdit*)GetDlgItem(IDC_EDIT_SERVER))->SetReadOnly(TRUE);
@@ -512,30 +523,14 @@ void AccountDlg::OnBnClickedOk()
 	m_Account.disableSessionTimer = ((CButton*)GetDlgItem(IDC_SESSION_TIMER))->GetCheck();
 
 	// -----------------------------------------------------------------------
-	// Login simplificado: forca os valores fixos da conta, independente dos
-	// controles. So Usuario (username), Login (authID) e Senha permanecem
-	// como digitados pelo usuario. (nao se aplica a conta local, id == 0)
+	// Login simplificado (usuario comum): o Nome de Exibicao segue o Usuario
+	// (ramal). Os demais campos sao salvos como exibidos -- estao travados na
+	// UI, com os valores definidos pelo admin ou semeados na criacao da conta.
+	// No Modo administrador nada e forcado.
+	// (nao se aplica a conta local, id == 0)
 	// -----------------------------------------------------------------------
-	if (accountId != 0) {
-	m_Account.label = _T(_GLOBAL_ACC_LABEL);
-	m_Account.server = _T(_GLOBAL_ACC_SERVER);
-	m_Account.proxy = _T(_GLOBAL_ACC_PROXY);
-	m_Account.domain = _T(_GLOBAL_ACC_DOMAIN);
-	m_Account.srtp = _T(_GLOBAL_ACC_SRTP);
-	m_Account.transport = _T(_GLOBAL_ACC_TRANSPORT);
-	m_Account.publicAddr = _T(_GLOBAL_ACC_PUBLIC_ADDR);
-	m_Account.registerRefresh = _GLOBAL_ACC_REGISTER_REFRESH;
-	m_Account.keepAlive = _GLOBAL_ACC_KEEP_ALIVE;
-	m_Account.publish = _GLOBAL_ACC_PUBLISH;
-	m_Account.allowRewrite = _GLOBAL_ACC_REWRITE;
-	m_Account.ice = _GLOBAL_ACC_ICE;
-	m_Account.disableSessionTimer = _GLOBAL_ACC_DISABLE_SESS_TIMER;
-	m_Account.hideCID = false;
-	m_Account.dialingPrefix = _T("");
-	m_Account.dialPlan = _T("");
-	m_Account.voicemailNumber = _T("");
-	// Nome de Exibicao segue o Usuario (ramal)
-	m_Account.displayName = m_Account.username;
+	if (accountId != 0 && !msip_admin_mode) {
+		m_Account.displayName = m_Account.username;
 	}
 
 	if (

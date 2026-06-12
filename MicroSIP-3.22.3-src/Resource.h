@@ -19,6 +19,8 @@
 #define IDD_RINGIN	112
 #define IDD_TRANSFER	113
 #define IDD_CONFERNCE	114
+// G4F: dialogo de senha do Modo administrador
+#define IDD_ADMIN_LOGIN	115
 
 #define IDI_MAINFRAME	127
 #define IDI_ICON1		129
@@ -519,6 +521,9 @@
 #define ID_UPDATES	32813
 #define ID_SMS 32814
 #define ID_CMD 32815
+// G4F: Modo administrador (menu) e campo de senha do dialogo
+#define ID_ADMIN_MODE 32816
+#define IDC_ADMIN_PASSWORD 1206
 #define ID_ACCOUNT_CHANGE_RANGE	40000
 #define ID_ACCOUNT_EDIT_RANGE	40100
 #define ID_ATTENDED_TRANSFER_RANGE	40200
@@ -535,7 +540,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        265
 #define _APS_NEXT_COMMAND_VALUE         32818
-#define _APS_NEXT_CONTROL_VALUE         1206
+#define _APS_NEXT_CONTROL_VALUE         1207
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

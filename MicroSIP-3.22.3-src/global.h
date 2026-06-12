@@ -463,3 +463,7 @@ void msip_call_recording_start(call_user_data *user_data, pjsua_call_info *call_
 void msip_call_recording_stop(call_user_data *user_data, int id = 0, bool force = false);
 CString msip_url_mask(CString url);
 void msip_startup_set(bool enable);
+
+// Modo administrador (sessao): destrava as configuracoes fixas da UI.
+extern bool msip_admin_mode;
+bool msip_verify_admin_password(CString password);

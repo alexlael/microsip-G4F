@@ -1,8 +1,14 @@
 # Design — Modo Administrador (escopo local)
 
-Feature planejada. Permite que um **admin** destrave as configurações hoje
-fixas, ajuste-as, e os novos valores fiquem (travados) para quem usar aquele
-MicroSIP.
+**Implementado (produção, v3.22.8).** Permite que um **admin** destrave as
+configurações fixas, ajuste-as, e os novos valores fiquem (travados) para quem
+usar aquele G4FSIP.
+
+## Como está implementado
+- Menu principal → **"Modo administrador…"** abre um diálogo (`IDD_ADMIN_LOGIN`) pedindo a senha.
+- A senha é comparada por **hash SHA-256** (`msip_verify_admin_password` em `global.cpp`) com `_GLOBAL_ADMIN_PASSWORD_HASH` em `const.h`. Só o hash vai no binário; trocar a senha = recompilar.
+- Sucesso → `msip_admin_mode = true` (flag de sessão). As travas de `SettingsDlg` e `AccountDlg` respeitam `if (!msip_admin_mode)`.
+- Persistência: padrões aplicados via "semear uma vez" (`policySeeded=1` no `.ini`, em `AccountSettings::Init`). O que o admin salva sobrescreve e persiste.
 
 > ⚠️ Este documento descreve **como** fazer. A senha de admin **não** fica aqui
 > nem em texto no código — apenas o seu *hash*.

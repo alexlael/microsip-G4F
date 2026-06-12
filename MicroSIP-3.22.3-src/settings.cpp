@@ -175,7 +175,7 @@ void AccountSettings::Init()
             pathRoaming = appDataRoaming;
             CreateDirectory(appDataLocal, NULL);
             pathLocal = appDataLocal;
-            logFile = pathExe + _T("\\") + logFile;   // G4F: log de suporte na pasta de instalacao
+            logFile = pathLocal + logFile;
             if (!::PathFileExists(pathRoaming + iniFile) && ::PathFileExists(pathLocal + iniFile)) {
                 MoveFile(pathLocal + iniFile, pathRoaming + iniFile);
             }
@@ -515,8 +515,6 @@ void AccountSettings::Init()
     ptr = denyIncoming.GetBuffer(255);
     GetPrivateProfileString(section, _T("denyIncoming"), _T(_GLOBAL_SETT_DENYINC_DEFAULT), ptr, 256, iniFile);
     denyIncoming.ReleaseBuffer();
-    // Bloquear chamada entrante: forcado sempre como "Nao", sem possibilidade de alteracao
-    denyIncoming = _T("");
 
     //--
     ptr = usersDirectory.GetBuffer(255);
@@ -848,53 +846,65 @@ void AccountSettings::Init()
     AccountLoad(0, &accountLocal);
 
     // =====================================================================
-    // G4F: configuracoes FIXAS (exatamente como definido pela empresa).
-    // O usuario so pode alterar os dispositivos de audio:
-    //   Ouvir toque em / Ouvir chamada em / Microfone.
-    // Todo o restante e forcado aqui, sobrescrevendo qualquer ini.
+    // G4FSIP: politica de configuracao da empresa -- "semear uma vez".
+    // Na 1a execucao (policySeeded ausente no ini) aplica os valores fixos
+    // abaixo e grava no ini (policySeeded=1). Nos boots seguintes vale o
+    // que esta no ini, que so o Modo administrador altera pela interface
+    // (para o usuario comum a tela de Configuracoes fica travada).
+    // O volume do toque (volumeRing) NAO e forcado: o usuario comum pode
+    // ajustar a barra livremente.
     // =====================================================================
-    ringtone = _T("");
-    micAmplification = false;
-    swLevelAdjustment = false;
-    audioCodecs = _T("PCMA/8000/1 PCMU/8000/1 G729/8000/1"); // G.711 A-law, u-law, G.729
-    vad = false;
-    ec = true;
-    opusStereo = false;
-    forceCodec = false;
-    recordingFormat = _T("mp3");
-    autoRecording = false;
-    recordingButton = true;
-    rport = true;                   // RFC3581 (necessario p/ registro atras de NAT)
-    sourcePort = 0;
-    rtpPortMin = 0;
-    rtpPortMax = 0;
-    dnsSrvNs = _T("");
-    dnsSrv = false;
-    stun = _T("");
-    enableSTUN = false;
-    DTMFMethod = 0;                 // Auto
-    autoAnswer = _T("all");         // Todas as chamadas
-    forwarding = _T("");            // Nao
-    forwardingNumber = _T("");
-    forwardingDelay = 0;
-    denyIncoming = _T("");          // Bloquear chamada entrante: Nao (oculto)
-    usersDirectory = _T("");
-    defaultAction = _T("");         // Padrao
-    enableMediaButtons = false;
-    headsetSupport = false;
-    localDTMF = true;               // Tons do teclado
-    singleMode = true;              // Modo Chamada Unica
-    enableLog = true;               // Log de suporte sempre ativo (arquivo na pasta do exe)
-    bringToFrontOnIncoming = true;  // Aparecer no topo ao receber chamada
-    randomAnswerBox = false;
-    callWaiting = false;
-    multiMonitor = false;
-    networkChanges = false;
-    disableMessaging = false;
-    disableNameLookup = false;
-    enableLocalAccount = false;
-    crashReport = false;
-    updatesInterval = _T("never");  // Nunca buscar atualizacao (travado)
+    ptr = str.GetBuffer(255);
+    GetPrivateProfileString(section, _T("policySeeded"), NULL, ptr, 256, iniFile);
+    str.ReleaseBuffer();
+    if (str != _T("1")) {
+        singleMode = true;              // Modo Chamada Unica
+        ringtone = _T("");              // Toque padrao
+        micAmplification = false;
+        swLevelAdjustment = false;
+        audioCodecs = _T("PCMA/8000/1 PCMU/8000/1 G729/8000/1"); // G.711 A/u-law + G.729
+        vad = false;
+        ec = true;                      // Cancelamento de eco
+        opusStereo = false;
+        forceCodec = false;
+        autoRecording = true;           // Gravacao de chamada
+        recordingFormat = _T("mp3");
+        recordingButton = true;         // REC
+        rport = true;                   // RFC3581 (registro atras de NAT)
+        sourcePort = 0;
+        rtpPortMin = 0;
+        rtpPortMax = 0;
+        dnsSrvNs = _T("");
+        dnsSrv = false;
+        stun = _T("");
+        enableSTUN = false;
+        DTMFMethod = 0;                 // Auto
+        autoAnswer = _T("all");         // Atendimento automatico: Todas as chamadas
+        autoAnswerDelay = 3;            // Demora: 3 segundos
+        forwarding = _T("");            // Encaminhamento: Nao
+        forwardingNumber = _T("");
+        forwardingDelay = 0;
+        denyIncoming = _T("button");    // Bloquear chamada entrante: Botao de controle
+        usersDirectory = _T("");
+        defaultAction = _T("");         // Lista de acao padrao: Padrao
+        enableMediaButtons = false;     // Usar teclas multimidia: nao
+        headsetSupport = false;         // Suporte para fone de ouvido: nao
+        localDTMF = true;               // Tons do teclado: sim
+        bringToFrontOnIncoming = true;  // Aparecer no topo ao receber chamada: sim
+        randomAnswerBox = false;        // Popup posicao aleatoria: nao
+        callWaiting = false;            // Chamada em espera: nao
+        multiMonitor = false;           // Suporte para varios monitores: nao
+        networkChanges = false;         // Lidar com alteracoes de IP: nao
+        disableMessaging = false;       // Desativar mensagens: nao
+        disableNameLookup = false;      // Desativar pesquisa de nomes: nao
+        enableLocalAccount = false;     // Habilitar conta local: nao
+        crashReport = false;            // Enviar relatorio de erro: nao
+        enableLog = true;               // Habilitar arquivo de log: sim
+        updatesInterval = _T("weekly"); // Verificar por atualizacoes: Semanalmente
+
+        SettingsSave();
+        WritePrivateProfileString(section, _T("policySeeded"), _T("1"), iniFile);
+    }
 }
 
 AccountSettings::AccountSettings()

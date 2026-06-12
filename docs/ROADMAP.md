@@ -7,7 +7,16 @@ Documento vivo — atualizar conforme as features evoluem.
 
 ---
 
-## ✅ Pronto (versão 3.22.5)
+## ✅ Produção (versão 3.22.8)
+
+- **Identidade própria G4FSIP** — pasta de instalação, `%APPDATA%\G4FSIP` e `Software\G4FSIP` totalmente independentes de qualquer MicroSIP já presente na máquina.
+- **Modo administrador** — item de menu + senha (somente o *hash* no exe) destrava Conta e Configurações na sessão; o que o admin salvar persiste no `.ini` (`policySeeded`) e vira a configuração travada do usuário.
+- **Configurações travadas, nada oculto** — usuário comum vê tudo mas só altera a **barra de volume do toque**; o resto só no modo admin.
+- **Padrões da empresa forçados (semear uma vez)** — codecs **G.711 A/u-law + G.729**, **atendimento automático "todas as chamadas" (3 s)**, **gravação MP3**, bloquear entrante "botão de controle", tons do teclado, aparecer no topo, etc.
+- **Conta** — usuário comum só edita **ramal e senha**; "Tornar Ativo" só muda no modo admin (conta sempre ativa para o usuário).
+- **Assinatura digital** (code signing G4F) do executável e do instalador.
+
+### Histórico (versão 3.22.5)
 
 - **Login simplificado** — só ramal, login e senha editáveis; resto fixo/travado.
 - **Configurações travadas** — só dispositivos de áudio editáveis.
@@ -27,21 +36,13 @@ Documento vivo — atualizar conforme as features evoluem.
 
 ## 🛠️ Planejado
 
-### 1. Modo administrador (escopo local) — *prioritário*
-Permitir que um usuário admin destrave as configurações, ajuste, e os valores
-passem a valer (travados) para quem usar aquele MicroSIP.
-→ Design detalhado em [`docs/admin-mode.md`](admin-mode.md).
+### 1. Certificado de code signing comercial — *recomendado*
+Hoje o exe e o instalador são assinados com certificado **autoassinado** da G4F
+(a TI precisa distribuir o `.cer` como Raiz/Editor Confiável nas máquinas). Um
+certificado **OV de CA pública** tornaria o binário confiável em qualquer máquina
+sem instalar nada antes, e ajuda a evitar bloqueios de microfone por EDR.
 
-**Status:** desenhado, aguardando implementação.
-**Precisa definir antes:** senha do admin (vai como hash no exe) e se a política
-vale por usuário Windows (AppData) ou por máquina (ProgramData).
-
-### 2. Assinatura digital (code signing) — *opcional*
-Eliminar o aviso do **SmartScreen** ("editor desconhecido") no exe e no instalador.
-**Requer:** certificado de Code Signing (processo pago/externo).
-**Impacto:** só comodidade na instalação; não afeta funcionamento.
-
-### 3. (Futuro) Política centralizada — *se crescer*
+### 2. (Futuro) Política centralizada — *se crescer*
 Caso um dia se queira "muda uma vez, vale para todos os PCs": hospedar um arquivo
 de política num servidor (URL/HTTPS ou pasta de rede) e os clientes lerem no boot.
 Reaproveitaria o download que o MicroSIP já faz (`URLGetAsync`).

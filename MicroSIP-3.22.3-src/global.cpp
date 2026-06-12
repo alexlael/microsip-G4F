@@ -23,6 +23,7 @@
 #include "langpack.h"
 #include <afxinet.h>
 #include <Psapi.h>
+#include <Wincrypt.h>
 #include <atomic>
 #include "atlrx.h"
 #include "addons.h"
@@ -1711,5 +1712,38 @@ void msip_startup_set(bool enable)
 		}
 		regKey.Close();
 	}
+}
+
+// ---------------------------------------------------------------------------
+// Modo administrador
+// ---------------------------------------------------------------------------
+bool msip_admin_mode = false;
+
+bool msip_verify_admin_password(CString password)
+{
+	// SHA-256 (CryptoAPI) da senha em UTF-8, comparado em hex (minusculo)
+	// com o hash embutido no binario (_GLOBAL_ADMIN_PASSWORD_HASH).
+	CStringA utf8(CT2A(password, CP_UTF8));
+	HCRYPTPROV hProv = NULL;
+	HCRYPTHASH hHash = NULL;
+	bool result = false;
+	if (CryptAcquireContext(&hProv, NULL, NULL, PROV_RSA_AES, CRYPT_VERIFYCONTEXT)) {
+		if (CryptCreateHash(hProv, CALG_SHA_256, 0, 0, &hHash)) {
+			if (CryptHashData(hHash, (const BYTE*)(LPCSTR)utf8, utf8.GetLength(), 0)) {
+				BYTE digest[32];
+				DWORD len = sizeof(digest);
+				if (CryptGetHashParam(hHash, HP_HASHVAL, digest, &len, 0)) {
+					CStringA hex;
+					for (DWORD i = 0; i < len; i++) {
+						hex.AppendFormat("%02x", digest[i]);
+					}
+					result = (hex.Compare(_GLOBAL_ADMIN_PASSWORD_HASH) == 0);
+				}
+			}
+			CryptDestroyHash(hHash);
+		}
+		CryptReleaseContext(hProv, 0);
+	}
+	return result;
 }
 

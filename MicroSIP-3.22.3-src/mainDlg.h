@@ -245,6 +245,7 @@ public:
 	afx_msg void OnMenuCustomRange(UINT nID);
 	afx_msg void OnMenuSettings();
 	afx_msg void OnMenuShortcuts();
+	afx_msg void OnMenuAdminMode();
 	afx_msg void OnMenuAlwaysOnTop();
 	afx_msg void OnMenuLog();
 	afx_msg void OnMenuExit();

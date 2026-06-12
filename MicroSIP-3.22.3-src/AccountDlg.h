@@ -34,7 +34,8 @@ public:
 	enum { IDD = IDD_ACCOUNT };
 
 	void Load(int id);
-	void ApplyDefaultsAndLock();
+	void ApplyDefaults();
+	void LockFields();
 
 private:
 	int width;

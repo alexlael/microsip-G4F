@@ -1692,6 +1692,7 @@ BEGIN_MESSAGE_MAP(CmainDlg, CBaseDialog)
 	ON_MESSAGE(UM_UPDATE_CHECKER_LOADED, OnUpdateCheckerLoaded)
 	ON_COMMAND(ID_SETTINGS, OnMenuSettings)
 	ON_COMMAND(ID_SHORTCUTS, OnMenuShortcuts)
+	ON_COMMAND(ID_ADMIN_MODE, OnMenuAdminMode)
 	ON_COMMAND(ID_ALWAYS_ON_TOP, OnMenuAlwaysOnTop)
 	ON_COMMAND(ID_LOG, OnMenuLog)
 	ON_COMMAND(ID_EXIT, OnMenuExit)
@@ -2242,16 +2243,22 @@ void CmainDlg::OnMenuAccountEdit(UINT nID)
 void CmainDlg::OnMenuAccountChange(UINT nID)
 {
 	int idNew = nID - ID_ACCOUNT_CHANGE_RANGE + 1;
-	// G4F: a conta ativa NUNCA pode ser desativada (fica sempre ativa).
-	// Clicar na conta que ja esta ativa nao faz nada.
-	if (accountSettings.accountId == idNew) {
+	// G4F: a conta ativa NUNCA pode ser desativada pelo usuario comum.
+	// No Modo administrador o comportamento original (toggle) e restaurado.
+	if (accountSettings.accountId == idNew && !msip_admin_mode) {
 		return;
 	}
 	if (accountSettings.accountId) {
 		PJAccountDelete(true);
 	}
-	accountSettings.accountId = idNew;
-	accountSettings.AccountLoad(accountSettings.accountId, &accountSettings.account);
+	if (accountSettings.accountId != idNew) {
+		accountSettings.accountId = idNew;
+		accountSettings.AccountLoad(accountSettings.accountId, &accountSettings.account);
+	}
+	else {
+		accountSettings.accountId = 0;
+		InitUI();
+	}
 	OnAccountChanged();
 	accountSettings.SettingsSave();
 	mainDlg->PJAccountAdd();
@@ -2297,6 +2304,45 @@ void CmainDlg::OnMenuShortcuts()
     else {
         shortcutsDlg->SetForegroundWindow();
     }
+}
+
+// ---------------------------------------------------------------------------
+// Modo administrador: pede a senha (comparada por hash SHA-256 embutido no
+// binario) e, se correta, destrava as telas de Conta e Configuracoes durante
+// a sessao. Selecionar o item de novo desativa o modo.
+// ---------------------------------------------------------------------------
+class AdminLoginDlg : public CDialog
+{
+public:
+	AdminLoginDlg(CWnd* pParent = NULL) : CDialog(IDD_ADMIN_LOGIN, pParent) {}
+protected:
+	virtual void OnOK()
+	{
+		CString password;
+		GetDlgItem(IDC_ADMIN_PASSWORD)->GetWindowText(password);
+		if (msip_verify_admin_password(password)) {
+			CDialog::OnOK();
+		}
+		else {
+			AfxMessageBox(_T("Senha incorreta."));
+			((CEdit*)GetDlgItem(IDC_ADMIN_PASSWORD))->SetSel(0, -1);
+			GetDlgItem(IDC_ADMIN_PASSWORD)->SetFocus();
+		}
+	}
+};
+
+void CmainDlg::OnMenuAdminMode()
+{
+	if (msip_admin_mode) {
+		msip_admin_mode = false;
+		BaloonPopup(_T("Modo administrador"), _T("Desativado. As telas voltam a abrir travadas."), NIIF_INFO);
+		return;
+	}
+	AdminLoginDlg dlg(this);
+	if (dlg.DoModal() == IDOK) {
+		msip_admin_mode = true;
+		BaloonPopup(_T("Modo administrador"), _T("Ativado. Abra Conta ou Configuracoes para editar; o que salvar vale para o usuario."), NIIF_INFO);
+	}
 }
 
 void CmainDlg::OnMenuAlwaysOnTop()
@@ -2435,8 +2481,16 @@ void CmainDlg::MainPopupMenu(bool isMenuButton)
 					i++;
 				}
 				if (i == 1) {
-						// G4F: oculta o item "Tornar Ativo" (conta unica fica sempre ativa)
-						tracker->DeleteMenu(ID_ACCOUNT_CHANGE_RANGE, MF_BYCOMMAND);
+					MENUITEMINFO menuItemInfo;
+					menuItemInfo.cbSize = sizeof(MENUITEMINFO);
+					menuItemInfo.fMask = MIIM_STRING;
+					menuItemInfo.dwTypeData = Translate(_T("Make Active"));
+					tracker->SetMenuItemInfo(ID_ACCOUNT_CHANGE_RANGE, &menuItemInfo);
+					// G4FSIP: item visivel sempre; desativar a conta so no
+					// Modo administrador (acinzentado para o usuario comum)
+					if (!msip_admin_mode) {
+						tracker->EnableMenuItem(ID_ACCOUNT_CHANGE_RANGE, MF_BYCOMMAND | MF_GRAYED);
+					}
 				}
 				str = Translate(_T("Edit Account"));
 				str.Append(_T("\tCtrl+M"));
@@ -2466,6 +2520,8 @@ void CmainDlg::MainPopupMenu(bool isMenuButton)
 		str = Translate(_T("Shortcuts"));
 		str.Append(_T("\tCtrl+S"));
 		tracker->AppendMenu(MF_STRING, ID_SHORTCUTS, str);
+		// G4F: entrada do Modo administrador (com check quando ativo)
+		tracker->AppendMenu(MF_STRING | (msip_admin_mode ? MF_CHECKED : 0), ID_ADMIN_MODE, _T("Modo administrador..."));
 	}
 
     bool separator = false;
