@@ -10,13 +10,13 @@ O objetivo é um cliente **pré-configurado e travado**: o usuário final só di
 
 **[➡️ Baixar o instalador (última versão)](https://github.com/alexlael/microsip-G4F/releases/latest)**
 
-Instalador mais recente: **`G4FSIP-Setup-3.22.9.exe`**.
+Instalador mais recente: **`G4FSIP-Setup-3.22.10.exe`**.
 
 - Instalação **por usuário** (não pede senha de administrador do Windows).
 - Instala em pasta própria (`G4FSIP`), **sem herdar** configurações do MicroSIP oficial.
 - Exe e instalador são **assinados digitalmente** (editor *G4F Advance Telecom*). Em máquinas onde o certificado da G4F ainda não é confiável, o SmartScreen pode avisar até o certificado ser distribuído pela TI.
 
-> Distribua **apenas o instalador**. Rodar o `microsip.exe` avulso entra em modo portátil e cria um `.ini` ao lado do executável.
+> Distribua **apenas o instalador**. Rodar o `microsip.exe` avulso entra em modo portátil, cria um `.ini` ao lado do executável e fica **sem os sinais sonoros** (os `.wav` só são instalados pelo instalador).
 
 ---
 
@@ -39,7 +39,7 @@ Instalador mais recente: **`G4FSIP-Setup-3.22.9.exe`**.
 | **Idioma** | Pacote externo | **Português (BR) embutido** no executável |
 | **Ícone** | Logo MicroSIP | **Logo da G4F** |
 | **Vídeo** | Sim | **Desabilitado** (build de voz) |
-| **Distribuição** | Instalador + DLLs | **Executável único** (OpenSSL, runtime C/C++, MFC e G.729 estáticos) — sem DLLs |
+| **Distribuição** | Instalador + DLLs | **Executável único** (OpenSSL, runtime C/C++, MFC e G.729 estáticos) — sem DLLs. O instalador acompanha apenas os 6 `.wav` de sinalização sonora (bip de chamada, encerramento, toque, mensagens) |
 | **Assinatura** | Assinado pelo autor | **Assinado pela G4F** (code signing) |
 
 Os valores fixos da conta ficam em [`define.h`](MicroSIP-3.22.3-src/define.h) (`_GLOBAL_ACC_*`); os padrões forçados das Configurações ficam no bloco `policySeeded` no fim de `AccountSettings::Init` em [`settings.cpp`](MicroSIP-3.22.3-src/settings.cpp). A identidade (`_GLOBAL_NAME`) e o *hash* da senha de admin ficam em [`const.h`](MicroSIP-3.22.3-src/const.h).
@@ -84,9 +84,9 @@ signtool sign /sha1 <thumbprint-do-cert-G4F> /fd SHA256 ^
 ```bat
 ISCC.exe MicroSIP-3.22.3-src\installer\g4fsip.iss
 signtool sign /sha1 <thumbprint-do-cert-G4F> /fd SHA256 ^
-  /tr http://timestamp.digicert.com /td SHA256 G4FSIP-Setup-3.22.9.exe
+  /tr http://timestamp.digicert.com /td SHA256 G4FSIP-Setup-3.22.10.exe
 ```
-Saída: `G4FSIP-Setup-3.22.9.exe`.
+Saída: `G4FSIP-Setup-3.22.10.exe`.
 
 ---
 
@@ -104,6 +104,7 @@ MicroSIP-3.22.3-src/
 ├── mainDlg.cpp            Item de menu + diálogo do Modo administrador
 ├── lib/langpack.cpp       Idioma embutido
 ├── res/                   Ícone (logo G4F) + langpack pt-BR
+├── sounds/                Sinais sonoros (.wav): bip de chamada, encerramento, toque, mensagens
 └── installer/
     └── g4fsip.iss         Script do instalador (Inno Setup)
 ```

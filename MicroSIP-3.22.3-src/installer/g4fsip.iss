@@ -6,7 +6,7 @@
 ; O exe vem de ..\Release\microsip.exe (saida do build Release|Win32).
 
 #define MyAppName "G4FSIP"
-#define MyAppVersion "3.22.9"
+#define MyAppVersion "3.22.10"
 #define MyAppPublisher "G4F / Advance Telecom"
 #define MyAppExeName "microsip.exe"
 
@@ -43,6 +43,10 @@ Name: "startupicon"; Description: "Iniciar o {#MyAppName} automaticamente com o 
 
 [Files]
 Source: "..\Release\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+; Sinais sonoros do MicroSIP (bip de chamada entrando, som de encerramento,
+; toque, mensagens). O app os toca a partir da pasta do exe (pathExe); sem
+; eles nao ha sinalizacao sonora. Originais do MicroSIP oficial 3.22.3.
+Source: "..\sounds\*.wav"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"

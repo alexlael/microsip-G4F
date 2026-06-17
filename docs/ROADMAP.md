@@ -7,8 +7,9 @@ Documento vivo — atualizar conforme as features evoluem.
 
 ---
 
-## ✅ Produção (versão 3.22.9)
+## ✅ Produção (versão 3.22.10)
 
+- **Sinais sonoros** — o instalador acompanha os 6 `.wav` do MicroSIP (bip de chamada entrando, som de encerramento, toque, mensagens). Antes da 3.22.10 o build de exe único não os incluía e não havia sinalização sonora — inclusive o bip de chamada entrando com atendimento automático ligado.
 - **Identidade própria G4FSIP** — pasta de instalação, `%APPDATA%\G4FSIP` e `Software\G4FSIP` totalmente independentes de qualquer MicroSIP já presente na máquina.
 - **Modo administrador** — item de menu + senha (somente o *hash* no exe) destrava Conta e Configurações na sessão; o que o admin salvar persiste no `.ini` (`policySeeded`) e vira a configuração travada do usuário.
 - **Configurações travadas** — usuário comum altera apenas os **dispositivos de áudio** (Ouvir toque em, Ouvir chamada em, Microfone) e a **barra de volume do toque**; o resto só no modo admin.
@@ -17,6 +18,10 @@ Documento vivo — atualizar conforme as features evoluem.
 - **Verificar atualizações** — padrão **"Nunca"**.
 - **Conta única (usuário comum)** — só edita **ramal e senha**; a conta aparece uma vez no menu (sem duplicação) e não há rótulo "Tornar Ativo" — clicar na conta a mantém ativa, sem cair por clique acidental. Múltiplas contas só no modo admin.
 - **Assinatura digital** (code signing G4F) do executável e do instalador.
+
+### Histórico (versão 3.22.9)
+
+- Correções de UI: "Bloquear chamada entrante" sempre "Não" e oculto; dispositivos de áudio + volume sempre editáveis; "Verificar atualizações" padrão "Nunca"; conta única (sem duplicação no menu, sem rótulo "Tornar Ativo"). Ainda **sem** os sinais sonoros — adicionados na 3.22.10.
 
 ### Histórico (versão 3.22.8)
 
