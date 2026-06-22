@@ -17,8 +17,8 @@
  */
 
 #pragma once
-#define _GLOBAL_VERSION "3.22.10"
-#define _GLOBAL_VERSION_COMMA 3,22,10,0
+#define _GLOBAL_VERSION "3.22.11"
+#define _GLOBAL_VERSION_COMMA 3,22,11,0
 #define _GLOBAL_KEY "*********"
 // Hash SHA-256 (hex, minusculo) da senha do modo administrador.
 // A senha em si NAO fica no codigo; para troca-la, gere o novo hash e recompile.
@@ -26,4 +26,4 @@
 // Video desabilitado nesta build (sem SDL/openh264); pjproject compilado com PJMEDIA_HAS_VIDEO 0
 //#define _GLOBAL_VIDEO
 #define _GLOBAL_NAME "G4FSIP"
-#define _GLOBAL_COMPANY "www.microsip.org"
+#define _GLOBAL_COMPANY "G4F"

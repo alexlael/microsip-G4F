@@ -7,8 +7,10 @@ Documento vivo — atualizar conforme as features evoluem.
 
 ---
 
-## ✅ Produção (versão 3.22.10)
+## ✅ Produção (versão 3.22.11)
 
+- **Modo de instalação selecionável** — no início do instalador o usuário escolhe **somente para mim** (sem admin, `%LocalAppData%` + HKCU) ou **para todos os usuários** (admin/UAC, `Program Files` + HKLM). As constantes `{auto*}` e `Root: HKA` se adaptam; o app detecta a instalação lendo HKCU e, como fallback, HKLM.
+- **Identidade do editor "G4F"** — assinatura de código e metadados do exe (`CompanyName`, copyright) padronizados como **G4F** (antes havia descasamento com "www.microsip.org", um sinal que a heurística do Defender penaliza).
 - **Sinais sonoros** — o instalador acompanha os 6 `.wav` do MicroSIP (bip de chamada entrando, som de encerramento, toque, mensagens). Antes da 3.22.10 o build de exe único não os incluía e não havia sinalização sonora — inclusive o bip de chamada entrando com atendimento automático ligado.
 - **Identidade própria G4FSIP** — pasta de instalação, `%APPDATA%\G4FSIP` e `Software\G4FSIP` totalmente independentes de qualquer MicroSIP já presente na máquina.
 - **Modo administrador** — item de menu + senha (somente o *hash* no exe) destrava Conta e Configurações na sessão; o que o admin salvar persiste no `.ini` (`policySeeded`) e vira a configuração travada do usuário.
@@ -18,6 +20,10 @@ Documento vivo — atualizar conforme as features evoluem.
 - **Verificar atualizações** — padrão **"Nunca"**.
 - **Conta única (usuário comum)** — só edita **ramal e senha**; a conta aparece uma vez no menu (sem duplicação) e não há rótulo "Tornar Ativo" — clicar na conta a mantém ativa, sem cair por clique acidental. Múltiplas contas só no modo admin.
 - **Assinatura digital** (code signing G4F) do executável e do instalador.
+
+### Histórico (versão 3.22.10)
+
+- Sinais sonoros (`.wav`) passam a ser empacotados no instalador. Instalação ainda **apenas por usuário** e editor da assinatura ainda "G4F Advance Telecom" — ambos revistos na 3.22.11 (modo de instalação selecionável e editor "G4F").
 
 ### Histórico (versão 3.22.9)
 

@@ -6,7 +6,7 @@
 ; O exe vem de ..\Release\microsip.exe (saida do build Release|Win32).
 
 #define MyAppName "G4FSIP"
-#define MyAppVersion "3.22.10"
+#define MyAppVersion "3.22.11"
 #define MyAppPublisher "G4F / Advance Telecom"
 #define MyAppExeName "microsip.exe"
 
@@ -28,7 +28,15 @@ SetupIconFile=..\res\microsip.ico
 Compression=lzma2
 SolidCompression=yes
 WizardStyle=modern
+; Permite escolher o modo de instalacao no inicio do Setup:
+;  - "Instalar para todos os usuarios" (pede elevacao/UAC, grava em
+;    Program Files + HKLM) ou
+;  - "Instalar somente para mim" (sem admin, grava em %LocalAppData% + HKCU).
+; Padrao = somente para mim (lowest), preservando a instalacao sem admin.
+; As constantes {auto*} e Root: HKA se adaptam ao modo escolhido; o app
+; detecta a instalacao lendo HKCU e, como fallback, HKLM (settings.cpp).
 PrivilegesRequired=lowest
+PrivilegesRequiredOverridesAllowed=dialog
 CloseApplications=yes
 ArchitecturesAllowed=x86 x64compatible
 ; app de 32 bits -> instala em Program Files (x86) em sistemas 64 bits
@@ -52,7 +60,9 @@ Source: "..\sounds\*.wav"; DestDir: "{app}"; Flags: ignoreversion
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{group}\Desinstalar {#MyAppName}"; Filename: "{uninstallexe}"
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
-Name: "{userstartup}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Parameters: "/minimized"; Tasks: startupicon
+; {autostartup} = inicializacao do usuario atual (por-usuario) ou de todos
+; os usuarios (todos-os-usuarios), conforme o modo de instalacao escolhido.
+Name: "{autostartup}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Parameters: "/minimized"; Tasks: startupicon
 
 [Registry]
 ; Registra o caminho da instalacao para o G4FSIP rodar em modo "instalado"
